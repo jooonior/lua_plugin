@@ -162,7 +162,24 @@ public:
         L_SetGlobalFunction(L, "print", &L_Print<Print>);
         L_SetGlobalFunction(L, "warn", &L_Print<Warn>);
 
-        return L_RunFile(L, module_path.c_str());
+        if (!L_RunFile(L, module_path.c_str(), LUA_MULTRET))
+            return false;
+
+        // No return value from script means success.
+        if (lua_gettop(L) == 0)
+            return true;
+
+        // Pop return value(s).
+        bool success = lua_toboolean(L, 0);
+        lua_settop(L, 0);
+
+        if (!success)
+        {
+            lua_close(L);
+            L = nullptr;
+        }
+
+        return success;
     }
 
     void Unload() override

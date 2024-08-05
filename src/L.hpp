@@ -129,18 +129,7 @@ inline bool L_RunFile(lua_State *L, const char *file_path, int argc, const char 
     }
 
     // Run loaded file.
-    if (!L_TryCall(L, argc, retc))
-        return false;
-
-    // If chuck didn't return anything we're done.
-    if (lua_gettop(L) == 0)
-        return true;
-
-    // Pop the returned value(s).
-    bool result = lua_toboolean(L, lua_gettop(L));
-    lua_settop(L, top);
-
-    return result;
+    return L_TryCall(L, argc, retc);
 }
 
 
