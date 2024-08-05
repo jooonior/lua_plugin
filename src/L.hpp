@@ -4,6 +4,8 @@
 
 #include <lua.hpp>
 
+#include <string>
+
 
 inline void L_StringifyStack(lua_State *L, int count)
 {
@@ -64,6 +66,47 @@ inline void L_SetGlobalFunction(lua_State *L, const char *name, lua_CFunction fn
 {
     lua_pushcfunction(L, fn);
     lua_setglobal(L, name);
+}
+
+
+template<typename ...Paths>
+inline void L_SetPackagePath(lua_State *L, Paths... paths)
+{
+    std::string lua_path;
+    std::string lua_cpath;
+
+    for (const char *path : { paths... })
+    {
+        lua_path.append(path);
+        lua_path.append("?.lua;");
+
+        lua_path.append(path);
+        lua_path.append("?\\init.lua;");
+
+        lua_cpath.append(path);
+        lua_cpath.append("?.dll;");
+
+        // This seems to be in `cpath` by default, probably a good idea to keep it.
+        lua_cpath.append(path);
+        lua_cpath.append("loadall.dll;");
+    }
+
+    // Pop trailing semicolon.
+    if constexpr (sizeof...(Paths) > 0)
+    {
+        lua_path.pop_back();
+        lua_cpath.pop_back();
+    }
+
+    lua_getglobal(L, "package");
+
+    lua_pushstring(L, lua_path.c_str());
+    lua_setfield(L, -2, "path");
+
+    lua_pushstring(L, lua_cpath.c_str());
+    lua_setfield(L, -2, "cpath");
+
+    lua_pop(L, 1);
 }
 
 
