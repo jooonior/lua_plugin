@@ -4,6 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua_plugin", "lua_plugin.vcxproj", "{1A395E83-91A1-4E3C-947C-A20011E657AA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4583F888-0A9B-4AB4-BD40-37F32475C38D} = {4583F888-0A9B-4AB4-BD40-37F32475C38D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luajit", "luajit.vcxproj", "{180EC554-0C0C-43F8-A5C1-39AC5B75C754}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua51.dll", "lua51.dll.vcxproj", "{4583F888-0A9B-4AB4-BD40-37F32475C38D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{180EC554-0C0C-43F8-A5C1-39AC5B75C754} = {180EC554-0C0C-43F8-A5C1-39AC5B75C754}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +31,22 @@ Global
 		{1A395E83-91A1-4E3C-947C-A20011E657AA}.Release|x64.Build.0 = Release|x64
 		{1A395E83-91A1-4E3C-947C-A20011E657AA}.Release|x86.ActiveCfg = Release|Win32
 		{1A395E83-91A1-4E3C-947C-A20011E657AA}.Release|x86.Build.0 = Release|Win32
+		{180EC554-0C0C-43F8-A5C1-39AC5B75C754}.Debug|x64.ActiveCfg = Dynamic|x64
+		{180EC554-0C0C-43F8-A5C1-39AC5B75C754}.Debug|x64.Build.0 = Dynamic|x64
+		{180EC554-0C0C-43F8-A5C1-39AC5B75C754}.Debug|x86.ActiveCfg = Dynamic|Win32
+		{180EC554-0C0C-43F8-A5C1-39AC5B75C754}.Debug|x86.Build.0 = Dynamic|Win32
+		{180EC554-0C0C-43F8-A5C1-39AC5B75C754}.Release|x64.ActiveCfg = Dynamic|x64
+		{180EC554-0C0C-43F8-A5C1-39AC5B75C754}.Release|x64.Build.0 = Dynamic|x64
+		{180EC554-0C0C-43F8-A5C1-39AC5B75C754}.Release|x86.ActiveCfg = Dynamic|Win32
+		{180EC554-0C0C-43F8-A5C1-39AC5B75C754}.Release|x86.Build.0 = Dynamic|Win32
+		{4583F888-0A9B-4AB4-BD40-37F32475C38D}.Debug|x64.ActiveCfg = Debug|x64
+		{4583F888-0A9B-4AB4-BD40-37F32475C38D}.Debug|x64.Build.0 = Debug|x64
+		{4583F888-0A9B-4AB4-BD40-37F32475C38D}.Debug|x86.ActiveCfg = Debug|Win32
+		{4583F888-0A9B-4AB4-BD40-37F32475C38D}.Debug|x86.Build.0 = Debug|Win32
+		{4583F888-0A9B-4AB4-BD40-37F32475C38D}.Release|x64.ActiveCfg = Release|x64
+		{4583F888-0A9B-4AB4-BD40-37F32475C38D}.Release|x64.Build.0 = Release|x64
+		{4583F888-0A9B-4AB4-BD40-37F32475C38D}.Release|x86.ActiveCfg = Release|Win32
+		{4583F888-0A9B-4AB4-BD40-37F32475C38D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
