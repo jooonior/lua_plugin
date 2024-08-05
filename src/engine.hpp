@@ -2,5 +2,5 @@
 
 using PrintFn_t = void(const char *format, ...);
 
-extern PrintFn_t *Print;
-extern PrintFn_t *Warn;
+inline PrintFn_t *Print;
+inline PrintFn_t *Warn;

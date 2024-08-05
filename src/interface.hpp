@@ -26,7 +26,7 @@ public:
     /**
      * \brief Instance for \c CreateInterface.
     */
-    static ServerPluginCallbacks *Instance;
+    static inline ServerPluginCallbacks *Instance = nullptr;
 
     ServerPluginCallbacks()
     {

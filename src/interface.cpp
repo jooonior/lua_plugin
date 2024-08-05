@@ -4,9 +4,6 @@
 #include <type_traits>
 
 
-ServerPluginCallbacks *ServerPluginCallbacks::Instance = nullptr;
-
-
 extern "C" __declspec(dllexport)
 void *CreateInterface(const char *name, int *return_code)
 {

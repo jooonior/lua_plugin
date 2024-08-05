@@ -62,12 +62,6 @@ bool FileExists(const char *path)
 }
 
 
-using PrintFn = void(const char *format, ...);
-
-PrintFn *Print = nullptr;
-PrintFn *Warn = nullptr;
-
-
 bool ConnectPrintFunctions()
 {
     auto tier0 = GetModuleHandleA("tier0.dll");
@@ -75,11 +69,11 @@ bool ConnectPrintFunctions()
     if (!tier0)
         return false;
 
-    Print = reinterpret_cast<PrintFn *>(GetProcAddress(tier0, "Msg"));
+    Print = reinterpret_cast<PrintFn_t *>(GetProcAddress(tier0, "Msg"));
     if (!Print)
         return false;
 
-    Warn = reinterpret_cast<PrintFn *>(GetProcAddress(tier0, "Warning"));
+    Warn = reinterpret_cast<PrintFn_t *>(GetProcAddress(tier0, "Warning"));
     if (!Warn)
         return false;
 
