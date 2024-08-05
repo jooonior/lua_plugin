@@ -167,6 +167,10 @@ public:
 
     void Unload() override
     {
+        // `Unload` is called even when `Load` fails.
+        if (L == nullptr)
+            return;
+
         lua_close(L);
         L = nullptr;
     }
