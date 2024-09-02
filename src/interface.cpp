@@ -4,6 +4,9 @@
 #include <type_traits>
 
 
+/**
+ * \brief Interface factory that gets called by the engine.
+*/
 extern "C" __declspec(dllexport)
 void *CreateInterface(const char *name, int *return_code)
 {

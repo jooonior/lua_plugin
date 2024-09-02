@@ -148,13 +148,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine.cpp" />
     <ClCompile Include="src\interface.cpp" />
+    <ClCompile Include="src\platform.cpp" />
     <ClCompile Include="src\plugin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine.hpp" />
     <ClInclude Include="src\interface.hpp" />
     <ClInclude Include="src\L.hpp" />
+    <ClInclude Include="src\platform.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="luajit.vcxproj">
