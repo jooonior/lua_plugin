@@ -5,12 +5,27 @@ using CreateInterfaceFn = void *(const char *, int *);
 struct edict_t;
 class CCommand;
 
+
 enum class PluginResult
 {
     CONTINUE = 0,
     OVERRIDE,
     STOP,
 };
+
+
+inline bool IsValidPluginResult(PluginResult result)
+{
+    switch (result)
+    {
+    case PluginResult::CONTINUE:
+    case PluginResult::OVERRIDE:
+    case PluginResult::STOP:
+        return true;
+    }
+
+    return false;
+}
 
 
 /**

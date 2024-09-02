@@ -91,9 +91,9 @@ void L_Push(lua_State *L, T &&value)
     {
         lua_pushnumber(L, value);
     }
-    else if constexpr (std::is_convertible<value_type, void *>{})
+    else if constexpr (std::is_convertible<value_type, const void *>{})
     {
-        lua_pushlightuserdata(L, value);
+        lua_pushlightuserdata(L, const_cast<void *>(static_cast<const void *>(value)));
     }
     else
     {

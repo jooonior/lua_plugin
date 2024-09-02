@@ -55,8 +55,11 @@ private:
     }
 
     template<typename... Args>
-    bool CallLuaMethod(const char *method, int retc, Args&&... args)
+    bool TryCallLuaMethod(const char *method, int retc, Args&&... args)
     {
+        if (L == nullptr)
+            return false;
+
         lua_getfield(L, -1, method);
 
         if (!lua_isfunction(L, -1))
@@ -157,7 +160,7 @@ public:
             return false;
         }
 
-        if (!CallLuaMethod("Load", LUA_MULTRET, interface_factory, game_server_factory))
+        if (!TryCallLuaMethod("Load", LUA_MULTRET, interface_factory, game_server_factory))
             return false;
 
         // Treat no return value as success.
@@ -179,7 +182,7 @@ public:
         if (L == nullptr)
             return;
 
-        CallLuaMethod("Unload", 0);
+        TryCallLuaMethod("Unload", 0);
 
         lua_close(L);
         L = nullptr;
@@ -187,7 +190,7 @@ public:
 
     const char *GetPluginDescription() override
     {
-        if (L != nullptr && CallLuaMethod("GetPluginDescription", 1))
+        if (TryCallLuaMethod("GetPluginDescription", 1))
         {
             const char *description = lua_tostring(L, -1);
             if (description != nullptr)
@@ -197,6 +200,109 @@ public:
         }
 
         return _description.c_str();
+    }
+
+    void Pause() override
+    {
+        TryCallLuaMethod("Pause", 0);
+    }
+
+    void UnPause() override
+    {
+        TryCallLuaMethod("UnPause", 0);
+    }
+
+    void LevelInit(char const *map_name) override
+    {
+        TryCallLuaMethod("LevelInit", 0);
+    }
+
+    void ServerActivate(edict_t *edict_list, int edict_count, int client_max) override
+    {
+        TryCallLuaMethod("ServerActivate", 0, edict_list, edict_count, client_max);
+    }
+
+    void GameFrame(bool simulating) override
+    {
+        TryCallLuaMethod("GameFrame", 0, simulating);
+    }
+
+    void LevelShutdown() override
+    {
+        TryCallLuaMethod("LevelShutdown", 0);
+    }
+
+    void ClientActive(edict_t *entity) override
+    {
+        TryCallLuaMethod("ClientActive", 0, entity);
+    }
+
+    void ClientDisconnect(edict_t *entity) override
+    {
+        TryCallLuaMethod("ClientDisconnect", 0, entity);
+    }
+
+    void ClientPutInServer(edict_t *entity, char const *player_name) override
+    {
+        TryCallLuaMethod("ClientPutInServer", 0, entity, player_name);
+    }
+
+    void SetCommandClient(int index) override
+    {
+        TryCallLuaMethod("SetCommandClient", 0, index);
+    }
+
+    void ClientSettingsChanged(edict_t *edict) override
+    {
+        TryCallLuaMethod("ClientSettingsChanged", 0, edict);
+    }
+
+    PluginResult ClientConnect(bool *allow_connect, edict_t *entity, const char *name, const char *address, char *reject, int max_reject_length) override
+    {
+        if (TryCallLuaMethod("ClientConnect", 1, allow_connect, entity, name, address, reject, max_reject_length))
+        {
+            auto result = static_cast<PluginResult>(lua_tointeger(L, -1));
+            lua_pop(L, 1);
+
+            if (IsValidPluginResult(result))
+                return result;
+
+            PluginWarn("Invalid Plugin::ClientConnect result: %i\n", result);
+        }
+
+        return PluginResult::CONTINUE;
+    }
+
+    PluginResult ClientCommand(edict_t *entity, const CCommand &args) override
+    {
+        if (TryCallLuaMethod("ClientCommand", 1, entity, &args))
+        {
+            auto result = static_cast<PluginResult>(lua_tointeger(L, -1));
+            lua_pop(L, 1);
+
+            if (IsValidPluginResult(result))
+                return result;
+
+            PluginWarn("Invalid Plugin::ClientCommand result: %i\n", result);
+        }
+
+        return PluginResult::CONTINUE;
+    }
+
+    PluginResult NetworkIDValidated(const char *user_name, const char *network_id) override
+    {
+        if (TryCallLuaMethod("NetworkIDValidated", 1, user_name, network_id))
+        {
+            auto result = static_cast<PluginResult>(lua_tointeger(L, -1));
+            lua_pop(L, 1);
+
+            if (IsValidPluginResult(result))
+                return result;
+
+            PluginWarn("Invalid Plugin::NetworkIDValidated result: %i\n", result);
+        }
+
+        return PluginResult::CONTINUE;
     }
 };
 
