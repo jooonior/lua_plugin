@@ -9,6 +9,29 @@
 #include <utility>
 
 
+template<typename F>
+struct defer
+{
+private:
+    F _fn;
+    bool _cancelled = false;
+
+public:
+    defer(F &&fn = {}) : _fn{ fn } {}
+
+    ~defer()
+    {
+        if (!_cancelled)
+            _fn();
+    }
+
+    void cancel()
+    {
+        _cancelled = true;
+    }
+};
+
+
 class Plugin : public ServerPluginCallbacks
 {
 private:
@@ -29,6 +52,24 @@ private:
     {
         Warn("[%s] ", _name.c_str());
         Warn(format, std::forward<Args>(args)...);
+    }
+
+    template<typename... Args>
+    bool CallLuaMethod(const char *method, int retc, Args&&... args)
+    {
+        lua_getfield(L, -1, method);
+
+        if (!lua_isfunction(L, -1))
+        {
+            lua_pop(L, 1);
+            lua_settop(L, lua_gettop(L) + retc);
+            return true;
+        }
+
+        lua_pushvalue(L, -2);  // the `self` argument
+        L_Push(L, std::forward<Args>(args)...);
+
+        return L_TryCall(L, 1 + sizeof...(args), retc);
     }
 
 public:
@@ -95,6 +136,11 @@ public:
             return false;
         }
 
+        defer release_lua_state([&]() {
+            lua_close(L);
+            L = nullptr;
+        });
+
         luaL_openlibs(L);
 
         L_SetGlobalFunction(L, "print", &L_Print<Print>);
@@ -102,22 +148,27 @@ public:
 
         L_SetPackagePath(L, _path.c_str());
 
-        if (L_RunFile(L, script_path.c_str(), LUA_MULTRET))
+        if (!L_RunFile(L, script_path.c_str(), 1))
+            return false;
+
+        if (!lua_istable(L, 1))
         {
-            // No return value from script means success.
-            if (lua_gettop(L) == 0)
-                return true;
-
-            // Pop return value(s).
-            bool success = lua_toboolean(L, 0);
-            lua_settop(L, 0);
-
-            if (success)
-                return true;
+            PluginPrint("Lua entry point \"%s\" did not return a table.\n", script_path.c_str());
+            return false;
         }
 
-        lua_close(L);
-        L = nullptr;
+        if (!CallLuaMethod("Load", LUA_MULTRET, interface_factory, game_server_factory))
+            return false;
+
+        // Treat no return value as success.
+        if (lua_gettop(L) == 1 || lua_toboolean(L, 2))
+        {
+            // Leave only the plugin table.
+            lua_settop(L, 1);
+
+            release_lua_state.cancel();
+            return true;
+        }
 
         return false;
     }
@@ -128,12 +179,23 @@ public:
         if (L == nullptr)
             return;
 
+        CallLuaMethod("Unload", 0);
+
         lua_close(L);
         L = nullptr;
     }
 
     const char *GetPluginDescription() override
     {
+        if (L != nullptr && CallLuaMethod("GetPluginDescription", 1))
+        {
+            const char *description = lua_tostring(L, -1);
+            if (description != nullptr)
+                _description = description;
+
+            lua_pop(L, 1);
+        }
+
         return _description.c_str();
     }
 };

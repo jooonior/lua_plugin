@@ -5,6 +5,7 @@
 #include <lua.hpp>
 
 #include <string>
+#include <type_traits>
 
 
 inline void L_StringifyStack(lua_State *L, int count)
@@ -66,6 +67,44 @@ inline void L_SetGlobalFunction(lua_State *L, const char *name, lua_CFunction fn
 {
     lua_pushcfunction(L, fn);
     lua_setglobal(L, name);
+}
+
+
+template<typename T>
+void L_Push(lua_State *L, T &&value)
+{
+    using value_type = std::remove_reference_t<T>;
+
+    if constexpr (std::is_null_pointer<value_type>{})
+    {
+        lua_pushstring(L, value);
+    }
+    else if constexpr (std::is_convertible<value_type, const char *>{})
+    {
+        lua_pushstring(L, value);
+    }
+    else if constexpr (std::is_integral<value_type>{})
+    {
+        lua_pushinteger(L, value);
+    }
+    else if constexpr (std::is_floating_point<value_type>{})
+    {
+        lua_pushnumber(L, value);
+    }
+    else if constexpr (std::is_convertible<value_type, void *>{})
+    {
+        lua_pushlightuserdata(L, value);
+    }
+    else
+    {
+        static_assert(!std::is_same<value_type, value_type>{}, "Don't know how to convert value to Lua type.");
+    }
+}
+
+template<typename... Args>
+void L_Push(lua_State *L, Args&&... args)
+{
+    (L_Push(L, args), ...);
 }
 
 
