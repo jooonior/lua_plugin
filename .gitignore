@@ -2,3 +2,6 @@
 /intermediate/
 .vs/
 *.vcxproj.user
+
+/mod/addons/*.dll
+/mod/sound/sound.cache
