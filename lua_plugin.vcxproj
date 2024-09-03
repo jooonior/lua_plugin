@@ -107,6 +107,7 @@
       <Command>xcopy /D /Y "$(TargetPath)" "$(SolutionDir)mod\addons\" &amp;&amp; xcopy /D /Y "$(TargetDir)lua51.dll" "$(SolutionDir)mod\addons\"</Command>
       <Message>Copying built DLLs to mod directory</Message>
       <Outputs>$(SolutionDir)mod\addons\$(TargetFileName);$(SolutionDir)mod\addons\lua51.dll;%(Outputs)</Outputs>
+      <Inputs>$(TargetPath);$(TargetDir)lua51.dll</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -129,6 +130,7 @@
       <Command>xcopy /D /Y "$(TargetPath)" "$(SolutionDir)mod\addons\" &amp;&amp; xcopy /D /Y "$(TargetDir)lua51.dll" "$(SolutionDir)mod\addons\"</Command>
       <Message>Copying built DLLs to mod directory</Message>
       <Outputs>$(SolutionDir)mod\addons\$(TargetFileName);$(SolutionDir)mod\addons\lua51.dll;%(Outputs)</Outputs>
+      <Inputs>$(TargetPath);$(TargetDir)lua51.dll</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -147,6 +149,7 @@
       <Command>xcopy /D /Y "$(TargetPath)" "$(SolutionDir)mod\addons\" &amp;&amp; xcopy /D /Y "$(TargetDir)lua51.dll" "$(SolutionDir)mod\addons\"</Command>
       <Message>Copying built DLLs to mod directory</Message>
       <Outputs>$(SolutionDir)mod\addons\$(TargetFileName);$(SolutionDir)mod\addons\lua51.dll;%(Outputs)</Outputs>
+      <Inputs>$(TargetPath);$(TargetDir)lua51.dll</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,6 +172,7 @@
       <Command>xcopy /D /Y "$(TargetPath)" "$(SolutionDir)mod\addons\" &amp;&amp; xcopy /D /Y "$(TargetDir)lua51.dll" "$(SolutionDir)mod\addons\"</Command>
       <Message>Copying built DLLs to mod directory</Message>
       <Outputs>$(SolutionDir)mod\addons\$(TargetFileName);$(SolutionDir)mod\addons\lua51.dll;%(Outputs)</Outputs>
+      <Inputs>$(TargetPath);$(TargetDir)lua51.dll</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
