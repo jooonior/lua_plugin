@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - "*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to update"
+        type: string
+        required: true
+        default: ""
+
+permissions:
+  contents: write
+
+env:
+  MOD_NAME: lua_plugin
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      ref: ${{ inputs.tag }}
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create release archives
+        run: |
+          for artifact in *; do
+            platform=$(echo "$artifact" | cut -d. -f1)
+            archive="$MOD_NAME.$platform"
+            mv "$artifact" "$MOD_NAME"
+            echo "Creating $archive archives from:"
+            tree "$MOD_NAME"
+            tar -cz --owner=root --group=root "$MOD_NAME" > "$archive.tag.gz"
+            zip -r9q "$archive.zip" "$MOD_NAME"
+            rm -r "$MOD_NAME"
+          done
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*"
+          artifactErrorsFailBuild: true
+          tag: ${{ inputs.tag }}
+          draft: true
+          # Only update release artifacts if the release already exists.
+          allowUpdates: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true

@@ -1,0 +1,51 @@
+name: Build the solution with MSBuild
+
+inputs:
+  platform:
+    description: "MSBuild build platform"
+    required: true
+    type: string
+
+  configuration:
+    description: "MSBuild build configuration"
+    required: true
+    type: string
+
+outputs:
+  artifact-id:
+    description: "ID of the artifact containing the built files"
+    value: ${{ steps.upload.outputs.artifact-id }}
+
+  artifact-url:
+    description: "URL of the artifact containing the built files"
+    value: ${{ steps.upload.outputs.artifact-url }}
+
+permissions:
+  contents: read
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout submodules
+      shell: pwsh
+      run: |
+        git submodule update --init --recursive
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build solution with MSBuild
+      shell: pwsh
+      run: |
+        msbuild `
+          -m `
+          -p:Configuration=${{inputs.configuration}} `
+          -p:Platform=${{inputs.platform}} `
+          (Resolve-Path *.sln)
+
+    - name: Upload artifact with built files
+      id: upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{inputs.platform}}.${{inputs.configuration}}
+        path: mod/

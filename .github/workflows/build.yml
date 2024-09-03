@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_call:
+    inputs:
+      ref:
+        description: "Reference passed to `actions/checkout` to checkout the repo"
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        platform: [x64, x86]
+        configuration: [Release]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Build solution
+        uses: ./.github/actions/build
+        with:
+          platform: ${{ matrix.platform }}
+          configuration: ${{ matrix.configuration }}
