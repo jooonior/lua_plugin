@@ -2,8 +2,14 @@ name: Build
 
 on:
   pull_request:
+    paths-ignore:
+      - "**.md"
+      - "mod/**"
   push:
     branches: [master]
+    paths-ignore:
+      - "**.md"
+      - "mod/**"
   workflow_call:
     inputs:
       ref:
