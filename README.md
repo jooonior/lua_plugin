@@ -82,6 +82,12 @@ The only modifications to the Lua environment are:
 No other integration with the engine is implemented. You are expected to use
 LuaJIT's [`ffi`][ffi] library for interacting with the engine.
 
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md).
+
+
 ## Building
 
 All dependencies are included as git submodules and integrated in the solution.
