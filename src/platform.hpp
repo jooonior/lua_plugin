@@ -4,5 +4,3 @@
 
 
 std::string GetPathToThisModule();
-
-bool FileExists(const char *path);

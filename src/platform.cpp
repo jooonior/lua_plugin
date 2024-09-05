@@ -38,18 +38,3 @@ std::string GetPathToThisModule()
 
     return path;
 }
-
-
-bool FileExists(const char *path)
-{
-    auto attributes = GetFileAttributesA(path);
-
-    // Fails if file does not exits.
-    if (attributes == INVALID_FILE_ATTRIBUTES)
-        return false;
-
-    if (attributes & FILE_ATTRIBUTE_DIRECTORY)
-        return false;
-
-    return true;
-}

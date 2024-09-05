@@ -5,6 +5,7 @@
 
 #include <lua.hpp>
 
+#include <filesystem>
 #include <string>
 #include <utility>
 
@@ -112,14 +113,15 @@ public:
         std::string script_path = _path;
         script_path.append(_name).append(".lua");
 
-        if (!FileExists(script_path.c_str()))
+        std::error_code error;
+        if (!std::filesystem::is_regular_file(script_path, error))
         {
             // Remove `.lua` extension.
             script_path.resize(script_path.length() - 4);
 
             script_path.append("/init.lua");
 
-            if (!FileExists(script_path.c_str()))
+            if (!std::filesystem::is_regular_file(script_path, error))
             {
                 PluginPrint(
                     "Lua entry point not found. Neither \"%s.lua\" nor \"%s/init.lua\" were found inside \"%s\".\n",
