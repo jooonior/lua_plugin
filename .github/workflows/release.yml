@@ -22,9 +22,12 @@ jobs:
     steps:
       - name: Download built artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: artifacts
 
       - name: Create release archives
         run: |
+          cd artifacts
           for artifact in *; do
             platform=$(echo "$artifact" | cut -d. -f1)
             archive="$MOD_NAME.$platform"
@@ -36,11 +39,17 @@ jobs:
             rm -r "$MOD_NAME"
           done
 
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          path: "repo"
+
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "*"
+          artifacts: "artifacts/*"
           artifactErrorsFailBuild: true
+          bodyFile: "repo/.github/release.md"
           draft: true
           # Only update release artifacts if the release already exists.
           allowUpdates: true
