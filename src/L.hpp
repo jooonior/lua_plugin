@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine.hpp"
+#include "platform.hpp"
 
 #include <lua.hpp>
 
@@ -127,11 +128,11 @@ inline void L_SetPackagePath(lua_State *L, Paths... paths)
         lua_path.append("?\\init.lua;");
 
         lua_cpath.append(path);
-        lua_cpath.append("?.dll;");
+        lua_cpath.append("?" DYNAMIC_LIBRARY_EXTENSION ";");
 
         // This seems to be in `cpath` by default, probably a good idea to keep it.
         lua_cpath.append(path);
-        lua_cpath.append("loadall.dll;");
+        lua_cpath.append("loadall" DYNAMIC_LIBRARY_EXTENSION ";");
     }
 
     // Pop trailing semicolon.
