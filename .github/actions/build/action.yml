@@ -2,12 +2,12 @@ name: Build the solution with MSBuild
 
 inputs:
   platform:
-    description: "MSBuild build platform"
+    description: "Build platform (architecture)"
     required: true
     type: string
 
   configuration:
-    description: "MSBuild build configuration"
+    description: "Build configuration"
     required: true
     type: string
 
@@ -57,5 +57,5 @@ runs:
       id: upload
       uses: actions/upload-artifact@v4
       with:
-        name: ${{inputs.platform}}.${{inputs.configuration}}
+        name: ${{ inputs.platform }}.${{ inputs.configuration }}
         path: mod/
