@@ -95,6 +95,10 @@ void L_Push(lua_State *L, T &&value)
     {
         lua_pushlightuserdata(L, const_cast<void *>(static_cast<const void *>(value)));
     }
+    else if constexpr (std::is_function<std::remove_pointer_t<value_type>>{})
+    {
+        lua_pushlightuserdata(L, reinterpret_cast<void *>(value));
+    }
     else
     {
         static_assert(!std::is_same<value_type, value_type>{}, "Don't know how to convert value to Lua type.");

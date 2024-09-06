@@ -25,6 +25,9 @@ add_library(lua_plugin SHARED ${SOURCES} ${HEADERS})
 set_property(TARGET lua_plugin PROPERTY CXX_STANDARD 17)
 set_property(TARGET lua_plugin PROPERTY CXX_STANDARD_REQUIRED ON)
 
+# On Linux, CMake prepends `lib` to library outputs by default.
+set_target_properties(lua_plugin PROPERTIES PREFIX "")
+
 target_link_libraries(
   lua_plugin
   luajit

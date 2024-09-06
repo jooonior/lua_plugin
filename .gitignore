@@ -1,7 +1,9 @@
+.cache/
 /build/
 /intermediate/
 .vs/
 *.vcxproj.user
 
 /mod/addons/*.dll
+/mod/addons/*.so
 /mod/sound/sound.cache
