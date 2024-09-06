@@ -14,9 +14,13 @@ void *CreateInterface(const char *name, int *return_code)
 {
     void *interface_ptr = nullptr;
 
-    if (strcmp(name, ServerPluginCallbacks::INTERFACE_VERSION) == 0)
+    for (std::string_view version : ServerPluginCallbacks::COMPATIBLE_VERSIONS)
     {
-        interface_ptr = ServerPluginCallbacks::Instance;
+        if (version == name)
+        {
+            interface_ptr = ServerPluginCallbacks::Instance;
+            break;
+        }
     }
 
     if (return_code != nullptr)

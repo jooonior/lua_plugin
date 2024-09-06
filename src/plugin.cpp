@@ -313,6 +313,21 @@ public:
 
         return PluginResult::CONTINUE;
     }
+
+    void OnQueryCvarValueFinished(int cookie, edict_t *player_entity, int status, const char *cvar_name, const char *cvar_value) override
+    {
+        TryCallLuaMethod("OnQueryCvarValueFinished", 0, cookie, player_entity, status, cvar_name, cvar_value);
+    }
+
+    void OnEdictAllocated(edict_t *edict) override
+    {
+        TryCallLuaMethod("OnEdictAllocated", 0, edict);
+    }
+
+    void OnEdictFreed(const edict_t *edict) override
+    {
+        TryCallLuaMethod("OnEdictFreed", 0, edict);
+    }
 };
 
 

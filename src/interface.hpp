@@ -1,5 +1,10 @@
 #pragma once
 
+#include <array>
+#include <string_view>
+#include <utility>
+
+
 using CreateInterfaceFn = void *(const char *, int *);
 
 struct edict_t;
@@ -28,6 +33,13 @@ inline bool IsValidPluginResult(PluginResult result)
 }
 
 
+template<typename T, typename... Args>
+constexpr auto make_array(Args&&... args) -> std::array<T, sizeof...(Args)>
+{
+    return { std::forward<Args>(args)... };
+}
+
+
 /**
  * \brief Base class imitating the server plugin callback interface.
  *
@@ -36,7 +48,11 @@ inline bool IsValidPluginResult(PluginResult result)
 class ServerPluginCallbacks
 {
 public:
-    static constexpr const char *INTERFACE_VERSION = "ISERVERPLUGINCALLBACKS001";
+    static constexpr std::array COMPATIBLE_VERSIONS = make_array<std::string_view>(
+        "ISERVERPLUGINCALLBACKS001",
+        "ISERVERPLUGINCALLBACKS002",
+        "ISERVERPLUGINCALLBACKS003"
+    );
 
     /**
      * \brief Instance for \c CreateInterface.
@@ -55,6 +71,9 @@ public:
     }
 
 public:
+
+    // ISERVERPLUGINCALLBACKS001
+
     virtual bool Load(CreateInterfaceFn *interface_factory, CreateInterfaceFn *game_server_factory) = 0;
 
     virtual void Unload() = 0;
@@ -88,4 +107,14 @@ public:
     virtual PluginResult ClientCommand(edict_t *entity, const CCommand &args) { return PluginResult::CONTINUE; }
 
     virtual PluginResult NetworkIDValidated(const char *user_name, const char *network_id) { return PluginResult::CONTINUE; }
+
+    // ISERVERPLUGINCALLBACKS002
+
+    virtual void OnQueryCvarValueFinished(int cookie, edict_t *player_entity, int status, const char *cvar_name, const char *cvar_value) {}
+
+    // ISERVERPLUGINCALLBACKS003
+
+    virtual void OnEdictAllocated(edict_t *edict) {}
+
+    virtual void OnEdictFreed(const edict_t *edict) {}
 };
