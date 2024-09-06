@@ -5,7 +5,7 @@
 
 bool ConnectEnginePrintFunctions()
 {
-    auto *tier0 = GetModuleHandle("tier0.dll");
+    auto *tier0 = GetModuleHandle(DYNAMIC_LIBRARY("tier0"));
 
     if (tier0 == nullptr)
         return false;

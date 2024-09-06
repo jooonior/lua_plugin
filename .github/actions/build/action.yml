@@ -1,13 +1,8 @@
-name: Build the solution with MSBuild
+name: Build the project
 
 inputs:
-  platform:
-    description: "Build platform (architecture)"
-    required: true
-    type: string
-
-  configuration:
-    description: "Build configuration"
+  preset:
+    description: "Build preset (see CMakePresets.json)"
     required: true
     type: string
 
@@ -26,14 +21,6 @@ permissions:
 runs:
   using: composite
   steps:
-    - name: Set variables
-      id: vars
-      shell: bash
-      run: >
-        echo
-        "build_directory=build/${{ inputs.platform }}-${{ inputs.configuration }}"
-        >> "$GITHUB_OUTPUT"
-
     - name: Checkout submodules
       shell: bash
       run: |
@@ -42,20 +29,16 @@ runs:
     - name: Configure
       shell: bash
       run: >
-        cmake
-        -S .
-        -B ${{ steps.vars.outputs.build_directory }}
-        -A ${{ inputs.platform }}
-        -DCMAKE_BUILD_TYPE=${{ inputs.configuration }}
+        cmake --preset="${{ inputs.preset }}"
 
     - name: Build
       shell: bash
-      run: |
-        cmake --build ${{ steps.vars.outputs.build_directory }}
+      run: >
+        cmake --build "build/${{ inputs.preset }}"
 
     - name: Upload artifact with built files
       id: upload
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.platform }}.${{ inputs.configuration }}
+        name: ${{ inputs.preset }}
         path: mod/

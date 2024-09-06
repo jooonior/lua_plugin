@@ -2,7 +2,7 @@
   "version": 5,
   "configurePresets": [
     {
-      "name": "default",
+      "name": ".default",
       "hidden": true,
       "binaryDir": "${sourceDir}/build/${presetName}",
       "environment": {
@@ -10,48 +10,93 @@
       }
     },
     {
-      "name": "x64",
+      "name": ".win",
       "hidden": true,
-      "inherits": "default",
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
+      "inherits": ".default",
+      "generator": "Visual Studio 17 2022",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
       }
     },
     {
-      "name": "x86",
+      "name": ".win32",
       "hidden": true,
-      "inherits": "default",
-      "architecture": {
-        "value": "x86",
-        "strategy": "external"
+      "inherits": ".win",
+      "architecture": "Win32"
+    },
+    {
+      "name": ".win64",
+      "hidden": true,
+      "inherits": ".win",
+      "architecture": "x64"
+    },
+    {
+      "name": ".linux",
+      "hidden": true,
+      "inherits": ".default",
+      "generator": "Unix Makefiles"
+    },
+    {
+      "name": ".linux32",
+      "hidden": true,
+      "inherits": ".linux",
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "-m32",
+        "CMAKE_CXX_FLAGS": "-m32"
       }
     },
     {
-      "name": "Release",
+      "name": ".linux64",
+      "hidden": true,
+      "inherits": ".linux",
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "-m64",
+        "CMAKE_CXX_FLAGS": "-m64"
+      }
+    },
+    {
+      "name": ".release",
       "hidden": true,
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
     },
     {
-      "name": "Debug",
+      "name": ".debug",
       "hidden": true,
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
     },
     {
-      "name": "x64-Debug",
-      "inherits": [ "x64", "Debug" ]
+      "name": "win32.debug",
+      "inherits": [ ".win32", ".debug" ]
     },
     {
-      "name": "x64-Release",
-      "inherits": [ "x64", "Release" ]
+      "name": "win32.release",
+      "inherits": [ ".win32", ".release" ]
     },
     {
-      "name": "x86-Debug",
-      "inherits": [ "x86", "Debug" ]
+      "name": "win64.debug",
+      "inherits": [ ".win64", ".debug" ]
     },
     {
-      "name": "x86-Release",
-      "inherits": [ "x86", "Release" ]
+      "name": "win64.release",
+      "inherits": [ ".win64", ".release" ]
+    },
+    {
+      "name": "linux32.debug",
+      "inherits": [ ".linux32", ".debug" ]
+    },
+    {
+      "name": "linux32.release",
+      "inherits": [ ".linux32", ".release" ]
+    },
+    {
+      "name": "linux64.debug",
+      "inherits": [ ".linux64", ".debug" ]
+    },
+    {
+      "name": "linux64.release",
+      "inherits": [ ".linux64", ".release" ]
     }
   ]
 }

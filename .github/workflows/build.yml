@@ -21,14 +21,28 @@ permissions:
 
 jobs:
   build:
-    runs-on: windows-latest
-
     strategy:
+      # Don't abort when one combination fails.
+      fail-fast: false
       matrix:
-        platform: [x64, Win32]
-        configuration: [Release]
+        os: [win, linux]
+        arch: [64, 32]
+        configuration: [release]
+        include:
+          - os: win
+            runner: windows-latest
+          - os: linux
+            runner: ubuntu-latest
+
+    runs-on: ${{ matrix.runner }}
 
     steps:
+      - name: Install 32-bit libs
+        if: ${{ matrix.os == 'linux' && matrix.arch == 32 }}
+        run: >
+          sudo apt-get install
+          g++-multilib
+
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
@@ -37,5 +51,4 @@ jobs:
       - name: Build solution
         uses: ./.github/actions/build
         with:
-          platform: ${{ matrix.platform }}
-          configuration: ${{ matrix.configuration }}
+          preset: ${{ matrix.os }}${{ matrix.arch }}.${{ matrix.configuration }}

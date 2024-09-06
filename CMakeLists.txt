@@ -25,6 +25,9 @@ add_library(lua_plugin SHARED ${SOURCES} ${HEADERS})
 set_property(TARGET lua_plugin PROPERTY CXX_STANDARD 17)
 set_property(TARGET lua_plugin PROPERTY CXX_STANDARD_REQUIRED ON)
 
+# On Linux, CMake prepends `lib` to library outputs by default.
+set_target_properties(lua_plugin PROPERTIES PREFIX "")
+
 target_link_libraries(
   lua_plugin
   luajit
@@ -46,4 +49,11 @@ add_custom_command(
     "$<TARGET_FILE:lua_plugin>"
     "$<TARGET_FILE:luajit>"
     "${PROJECT_SOURCE_DIR}/mod/addons/"
+)
+
+# On Linux, make the plugin load the LuaJIT library from its own directory.
+set_target_properties(
+  lua_plugin PROPERTIES
+  BUILD_WITH_INSTALL_RPATH TRUE
+  INSTALL_RPATH "$ORIGIN"
 )
