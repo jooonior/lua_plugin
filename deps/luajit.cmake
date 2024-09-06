@@ -9,6 +9,12 @@ target_include_directories(
 
 add_dependencies(luajit luajit.target)
 
+set(
+  LUAJIT_MAKEFLAGS
+  CFLAGS="${CMAKE_C_FLAGS}" LDFLAGS="${CMAKE_C_FLAGS}"
+  BUILDMODE=dynamic amalg
+)
+
 if(WIN32)
 
   add_custom_command(
@@ -17,7 +23,7 @@ if(WIN32)
       "${LUAJIT_SOURCE_DIR}/lua51.dll"
     WORKING_DIRECTORY "${LUAJIT_SOURCE_DIR}"
     # Use `msvcbuild.bat` if building with MSVC and `make` otherwise.
-    COMMAND "$<IF:$<BOOL:${MSVC}>,msvcbuild.bat;amalg,make;amalg>"
+    COMMAND "$<IF:$<BOOL:${MSVC}>,msvcbuild.bat;amalg,make;${LUAJIT_MAKEFLAGS}>"
     COMMAND_EXPAND_LISTS
     VERBATIM
   )
@@ -57,7 +63,9 @@ elseif(LINUX)
     OUTPUT
       "${LUAJIT_SOURCE_DIR}/libluajit.so"
     WORKING_DIRECTORY "${LUAJIT_SOURCE_DIR}"
-    COMMAND make BUILDMODE=dynamic amalg
+    COMMAND make "${LUAJIT_MAKEFLAGS}"
+    COMMAND_EXPAND_LISTS
+    VERBATIM
   )
 
   add_custom_command(
