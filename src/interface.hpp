@@ -78,43 +78,43 @@ public:
 
     virtual void Unload() = 0;
 
-    virtual void Pause() {}
+    virtual void Pause() = 0;
 
-    virtual void UnPause() {}
+    virtual void UnPause() = 0;
 
     virtual const char *GetPluginDescription() = 0;
 
-    virtual void LevelInit(char const *map_name) {}
+    virtual void LevelInit(char const *map_name) = 0;
 
-    virtual void ServerActivate(edict_t *edict_list, int edict_count, int client_max) {}
+    virtual void ServerActivate(edict_t *edict_list, int edict_count, int client_max) = 0;
 
-    virtual void GameFrame(bool simulating) {}
+    virtual void GameFrame(bool simulating) = 0;
 
-    virtual void LevelShutdown(void) {}
+    virtual void LevelShutdown(void) = 0;
 
-    virtual void ClientActive(edict_t *entity) {}
+    virtual void ClientActive(edict_t *entity) = 0;
 
-    virtual void ClientDisconnect(edict_t *entity) {}
+    virtual void ClientDisconnect(edict_t *entity) = 0;
 
-    virtual void ClientPutInServer(edict_t *entity, char const *player_name) {}
+    virtual void ClientPutInServer(edict_t *entity, char const *player_name) = 0;
 
-    virtual void SetCommandClient(int index) {}
+    virtual void SetCommandClient(int index) = 0;
 
-    virtual void ClientSettingsChanged(edict_t *edict) {}
+    virtual void ClientSettingsChanged(edict_t *edict) = 0;
 
-    virtual PluginResult ClientConnect(bool *allow_connect, edict_t *entity, const char *name, const char *address, char *reject, int max_reject_length) { return PluginResult::CONTINUE; }
+    virtual PluginResult ClientConnect(bool *allow_connect, edict_t *entity, const char *name, const char *address, char *reject, int max_reject_length) = 0;
 
-    virtual PluginResult ClientCommand(edict_t *entity, const CCommand &args) { return PluginResult::CONTINUE; }
+    virtual PluginResult ClientCommand(edict_t *entity, const CCommand &args) = 0;
 
-    virtual PluginResult NetworkIDValidated(const char *user_name, const char *network_id) { return PluginResult::CONTINUE; }
+    virtual PluginResult NetworkIDValidated(const char *user_name, const char *network_id) = 0;
 
     // ISERVERPLUGINCALLBACKS002
 
-    virtual void OnQueryCvarValueFinished(int cookie, edict_t *player_entity, int status, const char *cvar_name, const char *cvar_value) {}
+    virtual void OnQueryCvarValueFinished(int cookie, edict_t *player_entity, int status, const char *cvar_name, const char *cvar_value) = 0;
 
     // ISERVERPLUGINCALLBACKS003
 
-    virtual void OnEdictAllocated(edict_t *edict) {}
+    virtual void OnEdictAllocated(edict_t *edict) = 0;
 
-    virtual void OnEdictFreed(const edict_t *edict) {}
+    virtual void OnEdictFreed(const edict_t *edict) = 0;
 };
