@@ -25,7 +25,11 @@ add_library(lua_plugin SHARED ${SOURCES} ${HEADERS})
 set_property(TARGET lua_plugin PROPERTY CXX_STANDARD 17)
 set_property(TARGET lua_plugin PROPERTY CXX_STANDARD_REQUIRED ON)
 
-target_link_libraries(lua_plugin luajit)
+target_link_libraries(
+  lua_plugin
+  luajit
+  whereami
+)
 
 if(MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")
   message("Configuring MSVC for hot reload")

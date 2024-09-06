@@ -1,9 +1,9 @@
 #include "engine.hpp"
 #include "interface.hpp"
-#include "platform.hpp"
 #include "L.hpp"
 
 #include <lua.hpp>
+#include <whereami.h>
 
 #include <filesystem>
 #include <string>
@@ -79,10 +79,17 @@ private:
 public:
     Plugin()
     {
-        // Get path to this DLL.
-        _path = GetPathToThisModule();
-        if (_path.empty())
+        // Get path to this module.
+
+        int length = wai_getModulePath(nullptr, 0, nullptr);
+        if (length < 0)
+        {
+            // Nothing we can do...
             return;
+        }
+
+        _path.resize(length);
+        wai_getModulePath(_path.data(), _path.capacity(), nullptr);
 
         // Strip file extension.
         auto last_dot = _path.find_last_of(".");

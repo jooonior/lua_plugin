@@ -1,9 +1,5 @@
 #pragma once
 
-#include <string>
-
-
-std::string GetPathToThisModule();
 
 void *GetModuleHandle(const char *module_name);
 
