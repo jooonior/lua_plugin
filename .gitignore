@@ -6,4 +6,5 @@
 
 /mod/addons/*.dll
 /mod/addons/*.so
+/mod/addons/*.so.*
 /mod/sound/sound.cache

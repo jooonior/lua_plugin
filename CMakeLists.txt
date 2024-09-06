@@ -50,3 +50,10 @@ add_custom_command(
     "$<TARGET_FILE:luajit>"
     "${PROJECT_SOURCE_DIR}/mod/addons/"
 )
+
+# On Linux, make the plugin load the LuaJIT library from its own directory.
+set_target_properties(
+  lua_plugin PROPERTIES
+  BUILD_WITH_INSTALL_RPATH TRUE
+  INSTALL_RPATH "$ORIGIN"
+)
