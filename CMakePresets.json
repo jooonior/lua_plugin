@@ -4,7 +4,10 @@
     {
       "name": "default",
       "hidden": true,
-      "binaryDir": "${sourceDir}/build/${presetName}"
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "environment": {
+        "DEBUG_LAUNCH_OPTIONS": "-insecure -insert_search_path \"${sourceDir}/mod\" -window -w 800 -h 600 -novid -console"
+      }
     },
     {
       "name": "x64",
