@@ -2,8 +2,10 @@
 
 #if defined(_WIN32)
  #define INTERFACE extern "C" __declspec(dllexport)
+ #define DYNAMIC_LIBRARY(Name) Name ".dll"
 #else
  #define INTERFACE extern "C" __attribute__((visibility("default")))
+ #define DYNAMIC_LIBRARY(Name) "lib" Name ".so"
 #endif
 
 void *GetModuleHandle(const char *module_name);
