@@ -26,22 +26,32 @@ permissions:
 runs:
   using: composite
   steps:
+    - name: Set variables
+      id: vars
+      shell: bash
+      run: >
+        echo
+        "build_directory=build/${{ inputs.platform }}-${{ inputs.configuration }}"
+        >> "$GITHUB_OUTPUT"
+
     - name: Checkout submodules
-      shell: pwsh
+      shell: bash
       run: |
         git submodule update --init --recursive
 
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2
+    - name: Configure
+      shell: bash
+      run: >
+        cmake
+        -S .
+        -B ${{ steps.vars.outputs.build_directory }}
+        -A ${{ inputs.platform }}
+        -DCMAKE_BUILD_TYPE=${{ inputs.configuration }}
 
-    - name: Build solution with MSBuild
-      shell: pwsh
+    - name: Build
+      shell: bash
       run: |
-        msbuild `
-          -m `
-          -p:Configuration=${{inputs.configuration}} `
-          -p:Platform=${{inputs.platform}} `
-          (Resolve-Path *.sln)
+        cmake --build ${{ steps.vars.outputs.build_directory }}
 
     - name: Upload artifact with built files
       id: upload

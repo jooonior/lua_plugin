@@ -30,6 +30,9 @@ jobs:
           cd artifacts
           for artifact in *; do
             platform=$(echo "$artifact" | cut -d. -f1)
+            if [[ "$platform" == Win32 ]]; then
+              platform=x86
+            fi
             archive="$MOD_NAME.$platform"
             mv "$artifact" "$MOD_NAME"
             echo "Creating $archive archives from:"

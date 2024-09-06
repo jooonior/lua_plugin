@@ -1,0 +1,37 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "dll",
+      "project": "CMakeLists.txt",
+      "projectTarget": "lua_plugin.dll",
+      "name": "Team Fortress 2 (tf.exe)",
+      "exe": "C:/Program Files (x86)/Steam/steamapps/common/Team Fortress 2/tf.exe",
+      "args": [
+        "${env.DEBUG_LAUNCH_OPTIONS}"
+      ]
+    },
+    {
+      "type": "dll",
+      "project": "CMakeLists.txt",
+      "projectTarget": "lua_plugin.dll",
+      "name": "Team Fortress 2 (tf_win64.exe)",
+      "exe": "C:/Program Files (x86)/Steam/steamapps/common/Team Fortress 2/tf_win64.exe",
+      "args": [
+        "${env.DEBUG_LAUNCH_OPTIONS}"
+      ]
+    },
+    {
+      "type": "dll",
+      "project": "CMakeLists.txt",
+      "projectTarget": "lua_plugin.dll",
+      "name": "Source SDK Base 2013 Multiplayer (hl2.exe)",
+      "exe": "C:/Program Files (x86)/Steam/steamapps/common/Source SDK Base 2013 Multiplayer/hl2.exe",
+      "args": [
+        "-game sourcetest",
+        "${env.DEBUG_LAUNCH_OPTIONS}"
+      ]
+    }
+  ]
+}
