@@ -2,6 +2,16 @@ local ffi = require "ffi"
 
 
 -- Define FFI ctypes for interacting with the engine.
+
+-- Add `thiscall` calling convention to a function pointer.
+local function thiscall(ctype)
+  if ffi.os == "Windows" then
+    return "__thiscall " .. ctype
+  else
+    return ctype .. " __attribute__((thiscall))"
+  end
+end
+
 ffi.cdef [[
 // These definitions are taken from <tier1/convar.h> in source-sdk-2013.
 
@@ -83,11 +93,11 @@ function Plugin:Load(create_interface)
   end
 
   local ICvar__RegisterConCommand = ffi.cast(
-    "void (__thiscall *)(void *this, ConCommand *command)",
+    thiscall("void (*)(void *this, ConCommand *command)"),
     vfunc(icvar, 6)
   )
   local ICvar__FindCommand = ffi.cast(
-    "ConCommand * (__thiscall *)(void *this, const char *name)",
+    thiscall("ConCommand * (*)(void *this, const char *name)"),
     vfunc(icvar, 14)
   )
 
@@ -146,7 +156,7 @@ function Plugin:Unload()
   end
 
   local ICvar__UnregisterConCommand = ffi.cast(
-    "void (__thiscall *)(void *this, ConCommand *command)",
+    thiscall("void (*)(void *this, ConCommand *command)"),
     vfunc(icvar, 7)
   )
 
