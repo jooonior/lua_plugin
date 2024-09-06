@@ -37,6 +37,12 @@ jobs:
     runs-on: ${{ matrix.runner }}
 
     steps:
+      - name: Install 32-bit libs
+        if: ${{ matrix.os == 'linux' && matrix.arch == 32 }}
+        run: >
+          sudo apt-get install
+          g++-multilib
+
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
