@@ -13,11 +13,23 @@ Source engine games and Lua.
 
 ## Compatibility
 
+Both 32 and 64-bit games are supported, on both Windows and Linux. Keep it mind
+that you need a different version of the plugin binaries for each of those four
+combinations.
 
 ### Source
 
-Any Source engine game should work. This plugin supports both 32 and 64-bit
-games, but you need to download the correct version for your platform.
+All Source engine games _should_ work.
+
+<details>
+  <summary>Technical details</summary>
+
+  The plugin does not depend on any engine interfaces and only uses logging
+  functions from [`tier0`][tier0]. All it does is expose its callbacks under
+  versions 1 to 3 of the [`IServerPluginCallbacks`][IServerPluginCallbacks]
+  interface. Any game that supports those versions will work.
+
+</details>
 
 
 ### Source 2
@@ -27,6 +39,9 @@ be.
 
 
 ## Quickstart
+
+This section uses Windows filenames. On Linux, substitute `lua_plugin.dll` and
+`lua51.dll` for `lua_plugin.so` and `libluajit.*.so.*`, respectively.
 
 To create a new standalone plugin:
 
@@ -56,14 +71,14 @@ To create a new standalone plugin:
 Note that `lua51.dll` is linked dynamically, which means that the plugin will
 not work without it.
 
-
 ## Semantics
 
-When loaded, the plugin DLL finds and executes a Lua module matching its name
-(that is `?.lua` or `?/init.lua` where `?` is the DLL path without extension).
-This Lua module is expected to return a table of functions corresponding to the
-[`IServerPluginCallbacks`][IServerPluginCallbacks] callbacks. These functions
-are optional --- missing ones will be handled in the plugin DLL.
+When loaded, the plugin binary finds and executes a Lua module matching its
+name (that is `?.lua` or `?/init.lua` where `?` is the plugin binary path
+without extension). This Lua module is expected to return a table of functions
+corresponding to the [`IServerPluginCallbacks`][IServerPluginCallbacks]
+callbacks. These functions are optional --- missing ones will be handled in the
+plugin binary.
 
 Each plugin callback delegates to a Lua function of the same name (if defined).
 Arguments are forwarded to Lua and return values are forwarded back. Pointer and
@@ -75,9 +90,9 @@ The only modifications to the Lua environment are:
 - `print` and `warn` print to the in-game console
 - `arg[0]` contains the full path to the main Lua module
 - [`package.path`][package.path] is set to `?.lua` and `?/init.lua` inside of
-  the directory with the plugin DLL
-- [`package.cpath`][package.cpath] is set to `?.dll` and `loadall.dll` inside of
-  the directory with the plugin DLL
+  the directory with the plugin binary
+- [`package.cpath`][package.cpath] is set to `?.dll`/`?.so` and
+  `loadall.dll`/`loadall.so` inside of the directory with the plugin binary
 
 No other integration with the engine is implemented. You are expected to use
 LuaJIT's [`ffi`][ffi] library for interacting with the engine.
@@ -90,25 +105,20 @@ See [CHANGELOG.md](./CHANGELOG.md).
 
 ## Building
 
-All dependencies are included as git submodules and integrated in the solution.
-Building it with Visual Studio should just work(TM). At least it does for me in
-VS2022...
+The plugin and its dependencies are built with CMake. Check out the
+[`build` GitHub action](./.github/actions/build/action.yml) to see how.
 
 
 ## Debugging
 
-You can debug the plugin straight from Visual Studio. To do so, set these
-**Debugging** configuration properties for the **lua_plugin** project:
-
-- Command: Browse for the game executable (`tf_win64.exe`, `tf.exe`, `hl2.exe`)
-- Command Arguments: `-insecure -insert_search_path "$(SolutionDir)mod"`
-- Working Directory: `$(LocalDebuggerCommand)\..`
+You can debug the plugin straight from Visual Studio 2022. Debugging is
+configured in [`.vs/launch.vs.json`](./.vs/launch.vs.json). Keep in mind that
+you can't debug a 32-bit build in a 64-bit game (and vice versa).
 
 [LuaJIT]: https://luajit.org/
 [IServerPluginCallbacks]: https://developer.valvesoftware.com/wiki/IServerPluginCallbacks
+[tier0]: https://github.com/ValveSoftware/source-sdk-2013/blob/master/mp/src/public/tier0/dbg.h
 [ffi]: https://luajit.org/ext_ffi.html
 [ffi.cast]: https://luajit.org/ext_ffi_api.html#ffi_cast
 [package.path]: https://www.lua.org/manual/5.1/manual.html#pdf-package.path
 [package.cpath]: https://www.lua.org/manual/5.1/manual.html#pdf-package.cpath
-
-Then hit <kbd>F5</kbd> to launch and debug TF2 with the plugin loaded.
