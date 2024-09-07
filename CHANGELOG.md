@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.0
+
+- Linux support!
+- Implelented functions from versions 2 and 3 of `IServerPluginCallbacks`.
+- Updated example Lua script to work on both Windows and Linux.
+
 ## v1.1.0
 
 - Replaced example Lua script with a more complex one.
