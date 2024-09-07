@@ -1,5 +1,3 @@
-## Changes
-
 ---
 
 Each archive contains the plugin and Lua DLLs, along with an example Lua script

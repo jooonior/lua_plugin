@@ -44,12 +44,25 @@ jobs:
         with:
           path: "repo"
 
+      - name: Generate relese body
+        run: |
+          # Redirect stdout to file.
+          exec > release.md
+
+          echo "### Changes"
+
+          # Extract list of changes from CHANGELOG.
+          base_ref_escaped=$(echo ${{ github.base_ref }} | sed 's|\.|\\.|g')
+          sed -n "0,/^## ${base_ref_escaped}/d;/^## /q;p" repo/CHANGELOG.md
+
+          cat repo/.github/release-epilog.md
+
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
           artifacts: "artifacts/*"
           artifactErrorsFailBuild: true
-          bodyFile: "repo/.github/release.md"
+          bodyFile: "release.md"
           draft: true
           # Only update release artifacts if the release already exists.
           allowUpdates: true
