@@ -6,6 +6,9 @@ on:
       - "**.md"
       - "mod/**"
   push:
+    # Makes this workflow not run when pushing tags.
+    branches:
+      - '**'
     paths-ignore:
       - "**.md"
       - "mod/**"
