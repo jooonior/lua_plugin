@@ -34,7 +34,7 @@ jobs:
             mv "$artifact" "$MOD_NAME"
             echo "Creating $archive archives from:"
             tree "$MOD_NAME"
-            tar -cz --owner=root --group=root "$MOD_NAME" > "$archive.tag.gz"
+            tar -cz --owner=root --group=root "$MOD_NAME" > "$archive.tar.gz"
             zip -r9q "$archive.zip" "$MOD_NAME"
             rm -r "$MOD_NAME"
           done
