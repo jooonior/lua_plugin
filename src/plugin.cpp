@@ -248,17 +248,26 @@ void Plugin::ClientSettingsChanged(edict_t *edict)
     TryCallLuaMethod(L, "ClientSettingsChanged", 0, edict);
 }
 
+template<typename F>
+PluginResult PopPluginResult(lua_State *L, F &&error_handler)
+{
+    auto result = lua_tointeger(L, -1);
+    lua_pop(L, 1);
+
+    if (IsValidPluginResult(result))
+        return static_cast<PluginResult>(result);
+
+    error_handler(result);
+    return PluginResult::CONTINUE;
+}
+
 PluginResult Plugin::ClientConnect(bool *allow_connect, edict_t *entity, const char *name, const char *address, char *reject, int max_reject_length)
 {
     if (TryCallLuaMethod(L, "ClientConnect", 1, allow_connect, entity, name, address, reject, max_reject_length))
     {
-        auto result = static_cast<PluginResult>(lua_tointeger(L, -1));
-        lua_pop(L, 1);
-
-        if (IsValidPluginResult(result))
-            return result;
-
-        PluginWarn("Invalid Plugin::ClientConnect result: %i\n", result);
+        return PopPluginResult(L, [&](int result) {
+            PluginWarn("Invalid Plugin::ClientConnect result: %i\n", result);
+        });
     }
 
     return PluginResult::CONTINUE;
@@ -268,13 +277,9 @@ PluginResult Plugin::ClientCommand_v1(edict_t *entity)
 {
     if (TryCallLuaMethod(L, "ClientCommand", 1, entity))
     {
-        auto result = static_cast<PluginResult>(lua_tointeger(L, -1));
-        lua_pop(L, 1);
-
-        if (IsValidPluginResult(result))
-            return result;
-
-        PluginWarn("Invalid Plugin::ClientCommand result: %i\n", result);
+        return PopPluginResult(L, [&](int result) {
+            PluginWarn("Invalid Plugin::ClientCommand result: %i\n", result);
+        });
     }
 
     return PluginResult::CONTINUE;
@@ -284,13 +289,9 @@ PluginResult Plugin::ClientCommand_v2(edict_t *entity, const CCommand &args)
 {
     if (TryCallLuaMethod(L, "ClientCommand", 1, entity, &args))
     {
-        auto result = static_cast<PluginResult>(lua_tointeger(L, -1));
-        lua_pop(L, 1);
-
-        if (IsValidPluginResult(result))
-            return result;
-
-        PluginWarn("Invalid Plugin::ClientCommand result: %i\n", result);
+        return PopPluginResult(L, [&](int result) {
+            PluginWarn("Invalid Plugin::ClientCommand result: %i\n", result);
+        });
     }
 
     return PluginResult::CONTINUE;
@@ -300,13 +301,9 @@ PluginResult Plugin::NetworkIDValidated(const char *user_name, const char *netwo
 {
     if (TryCallLuaMethod(L, "NetworkIDValidated", 1, user_name, network_id))
     {
-        auto result = static_cast<PluginResult>(lua_tointeger(L, -1));
-        lua_pop(L, 1);
-
-        if (IsValidPluginResult(result))
-            return result;
-
-        PluginWarn("Invalid Plugin::NetworkIDValidated result: %i\n", result);
+        return PopPluginResult(L, [&](int result) {
+            PluginWarn("Invalid Plugin::NetworkIDValidated result: %i\n", result);
+        });
     }
 
     return PluginResult::CONTINUE;

@@ -1,8 +1,6 @@
 #pragma once
 
-#include <array>
 #include <string_view>
-#include <utility>
 
 
 using CreateInterfaceFn = void *(const char *, int *);
@@ -30,6 +28,11 @@ inline bool IsValidPluginResult(PluginResult result)
     }
 
     return false;
+}
+
+inline bool IsValidPluginResult(int result)
+{
+    return IsValidPluginResult(static_cast<PluginResult>(result));
 }
 
 
