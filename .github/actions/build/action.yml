@@ -34,7 +34,7 @@ runs:
     - name: Build
       shell: bash
       run: >
-        cmake --build "build/${{ inputs.preset }}"
+        cmake --build --preset "${{ inputs.preset }}"
 
     - name: Upload artifact with built files
       id: upload

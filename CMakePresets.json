@@ -98,5 +98,57 @@
       "name": "linux64.release",
       "inherits": [ ".linux64", ".release" ]
     }
+  ],
+  "buildPresets": [
+    {
+      "name": ".debug",
+      "hidden": true,
+      "configuration": "Debug"
+    },
+    {
+      "name": ".release",
+      "hidden": true,
+      "configuration": "Release"
+    },
+    {
+      "name": "win32.debug",
+      "configurePreset": "win32.debug",
+      "inherits": [ ".debug" ]
+    },
+    {
+      "name": "win32.release",
+      "configurePreset": "win32.release",
+      "inherits": [ ".release" ]
+    },
+    {
+      "name": "win64.debug",
+      "configurePreset": "win64.debug",
+      "inherits": [ ".debug" ]
+    },
+    {
+      "name": "win64.release",
+      "configurePreset": "win64.release",
+      "inherits": [ ".release" ]
+    },
+    {
+      "name": "linux32.debug",
+      "configurePreset": "linux32.debug",
+      "inherits": [ ".debug" ]
+    },
+    {
+      "name": "linux32.release",
+      "configurePreset": "linux32.release",
+      "inherits": [ ".release" ]
+    },
+    {
+      "name": "linux64.debug",
+      "configurePreset": "linux64.debug",
+      "inherits": [ ".debug" ]
+    },
+    {
+      "name": "linux64.release",
+      "configurePreset": "linux64.release",
+      "inherits": [ ".release" ]
+    }
   ]
 }
