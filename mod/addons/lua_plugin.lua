@@ -1,3 +1,13 @@
+local banner = [[
+If you're seeing this message in-game, it means that the plugin is working as
+intended. It may still fail to load, but that is because the example Lua script
+only supports specific versions of engine interfaces.
+]]
+
+banner = banner:gsub("\n", " ")
+print(banner)
+
+
 local ffi = require "ffi"
 
 
