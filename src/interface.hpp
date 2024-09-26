@@ -34,14 +34,10 @@ inline bool IsValidPluginResult(PluginResult result)
 
 
 /**
- * \brief Base class imitating the server plugin callback interface.
- *
- * See SDK's \c IServerPluginCallbacks.
-*/
-struct IServerPluginCallbacks_v1
+ * @brief Common prefix to \c IServerPluginCallbacks_v1 and \c IServerPluginCallbacks_v2.
+ */
+struct IServerPluginCallbacks_Common
 {
-    static constexpr std::string_view INTERFACE_VERSION = "ISERVERPLUGINCALLBACKS001";
-
     virtual bool Load(CreateInterfaceFn *interface_factory, CreateInterfaceFn *game_server_factory) = 0;
 
     virtual void Unload() = 0;
@@ -71,15 +67,26 @@ struct IServerPluginCallbacks_v1
     virtual void ClientSettingsChanged(edict_t *edict) = 0;
 
     virtual PluginResult ClientConnect(bool *allow_connect, edict_t *entity, const char *name, const char *address, char *reject, int max_reject_length) = 0;
+};
 
-    virtual PluginResult ClientCommand(edict_t *entity, const CCommand &args) = 0;
+struct IServerPluginCallbacks_v1 : IServerPluginCallbacks_Common
+{
+    static constexpr std::string_view INTERFACE_VERSION = "ISERVERPLUGINCALLBACKS001";
+
+    // This function is different between versions 1 and 2.
+    virtual PluginResult ClientCommand_v1(edict_t *entity) = 0;
 
     virtual PluginResult NetworkIDValidated(const char *user_name, const char *network_id) = 0;
 };
 
-struct IServerPluginCallbacks_v2 : IServerPluginCallbacks_v1
+struct IServerPluginCallbacks_v2 : IServerPluginCallbacks_Common
 {
     static constexpr std::string_view INTERFACE_VERSION = "ISERVERPLUGINCALLBACKS002";
+
+    // This function is different between versions 1 and 2.
+    virtual PluginResult ClientCommand_v2(edict_t *entity, const CCommand &args) = 0;
+
+    virtual PluginResult NetworkIDValidated(const char *user_name, const char *network_id) = 0;
 
     virtual void OnQueryCvarValueFinished(int cookie, edict_t *player_entity, int status, const char *cvar_name, const char *cvar_value) = 0;
 };
@@ -133,7 +140,7 @@ struct IServerPluginCallbacks_Portal2
 
     virtual PluginResult ClientConnect(bool *allow_connect, edict_t *entity, const char *name, const char *address, char *reject, int max_reject_length) = 0;
 
-    virtual PluginResult ClientCommand(edict_t *entity, const CCommand &args) = 0;
+    virtual PluginResult ClientCommand_v2(edict_t *entity, const CCommand &args) = 0;
 
     virtual PluginResult NetworkIDValidated(const char *user_name, const char *network_id) = 0;
 
@@ -238,9 +245,14 @@ struct ServerPluginRouter : IServerPluginCallbacks
         return plugin.ClientConnect(allow_connect, entity, name, address, reject, max_reject_length);
     }
 
-    virtual PluginResult ClientCommand(edict_t *entity, const CCommand &args)
+    virtual PluginResult ClientCommand_v1(edict_t *entity)
     {
-        return plugin.ClientCommand(entity, args);
+        return plugin.ClientCommand_v1(entity);
+    }
+
+    virtual PluginResult ClientCommand_v2(edict_t *entity, const CCommand &args)
+    {
+        return plugin.ClientCommand_v2(entity, args);
     }
 
     virtual PluginResult NetworkIDValidated(const char *user_name, const char *network_id)

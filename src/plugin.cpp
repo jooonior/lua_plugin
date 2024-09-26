@@ -264,7 +264,23 @@ PluginResult Plugin::ClientConnect(bool *allow_connect, edict_t *entity, const c
     return PluginResult::CONTINUE;
 }
 
-PluginResult Plugin::ClientCommand(edict_t *entity, const CCommand &args)
+PluginResult Plugin::ClientCommand_v1(edict_t *entity)
+{
+    if (TryCallLuaMethod(L, "ClientCommand", 1, entity))
+    {
+        auto result = static_cast<PluginResult>(lua_tointeger(L, -1));
+        lua_pop(L, 1);
+
+        if (IsValidPluginResult(result))
+            return result;
+
+        PluginWarn("Invalid Plugin::ClientCommand result: %i\n", result);
+    }
+
+    return PluginResult::CONTINUE;
+}
+
+PluginResult Plugin::ClientCommand_v2(edict_t *entity, const CCommand &args)
 {
     if (TryCallLuaMethod(L, "ClientCommand", 1, entity, &args))
     {
