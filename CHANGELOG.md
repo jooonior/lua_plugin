@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.1
+
+- Fixed Windows release builds using debug versions of system libraries.
+
 ## v1.2.0
 
 - Linux support!
