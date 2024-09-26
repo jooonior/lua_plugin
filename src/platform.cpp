@@ -19,6 +19,34 @@ void *GetSymbolAddress(void *module_handle, const char *symbol_name)
     return GetProcAddress(reinterpret_cast<HMODULE>(module_handle), symbol_name);
 }
 
+std::string GetExecutableName()
+{
+    std::string name(MAX_PATH, 0);
+
+    // Apparently this is how the API is supposed to be used.
+    while (true)
+    {
+        auto length = GetModuleFileNameA(nullptr, name.data(), name.size());
+
+        if (length < name.size())
+        {
+            name.resize(length);
+            break;
+        }
+
+        name.resize(name.size() * 2);
+    }
+
+    // Keep only filename.
+    auto last_slash = name.find_last_of("\\/");
+    if (last_slash != name.npos)
+    {
+        name.erase(0, last_slash + 1);
+    }
+
+    return name;
+}
+
 #elif defined(__linux__) //========= Linux ====================================#
 
 #include <dlfcn.h>
@@ -40,6 +68,13 @@ void *GetModuleHandle(const char *module_name)
 void *GetSymbolAddress(void *module_handle, const char *symbol_name)
 {
     return dlsym(module_handle, symbol_name);
+}
+
+extern char *program_invocation_short_name;
+
+std::string GetExecutableName()
+{
+    return program_invocation_short_name;
 }
 
 #else //=======================================================================#

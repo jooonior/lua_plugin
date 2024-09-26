@@ -93,6 +93,57 @@ struct IServerPluginCallbacks_v3 : IServerPluginCallbacks_v2
     virtual void OnEdictFreed(const edict_t *edict) = 0;
 };
 
+/**
+ * @brief Like \c IServerPluginCallbacks_v3, but with an extra function in the middle.
+ */
+struct IServerPluginCallbacks_Portal2
+{
+    static constexpr std::string_view INTERFACE_VERSION = IServerPluginCallbacks_v3::INTERFACE_VERSION;
+
+    virtual bool Load(CreateInterfaceFn *interface_factory, CreateInterfaceFn *game_server_factory) = 0;
+
+    virtual void Unload() = 0;
+
+    virtual void Pause() = 0;
+
+    virtual void UnPause() = 0;
+
+    virtual const char *GetPluginDescription() = 0;
+
+    virtual void LevelInit(char const *map_name) = 0;
+
+    virtual void ServerActivate(edict_t *edict_list, int edict_count, int client_max) = 0;
+
+    virtual void GameFrame(bool simulating) = 0;
+
+    virtual void LevelShutdown(void) = 0;
+
+    virtual void ClientActive(edict_t *entity) = 0;
+
+    // This added function makes it incompatible with IServerPluginCallbacks_v3.
+    virtual void ClientFullyConnect(edict_t *entity) = 0;
+
+    virtual void ClientDisconnect(edict_t *entity) = 0;
+
+    virtual void ClientPutInServer(edict_t *entity, char const *player_name) = 0;
+
+    virtual void SetCommandClient(int index) = 0;
+
+    virtual void ClientSettingsChanged(edict_t *edict) = 0;
+
+    virtual PluginResult ClientConnect(bool *allow_connect, edict_t *entity, const char *name, const char *address, char *reject, int max_reject_length) = 0;
+
+    virtual PluginResult ClientCommand(edict_t *entity, const CCommand &args) = 0;
+
+    virtual PluginResult NetworkIDValidated(const char *user_name, const char *network_id) = 0;
+
+    virtual void OnQueryCvarValueFinished(int cookie, edict_t *player_entity, int status, const char *cvar_name, const char *cvar_value) = 0;
+
+    virtual void OnEdictAllocated(edict_t *edict) = 0;
+
+    virtual void OnEdictFreed(const edict_t *edict) = 0;
+};
+
 
 /**
  * @brief Wraps \c ServerPlugin in an interface compatible with specified \c IServerPluginCallbacks version.

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #if defined(_WIN32)
  #define INTERFACE extern "C" __declspec(dllexport)
  #define DYNAMIC_LIBRARY_PREFIX
@@ -21,3 +23,5 @@ T *GetSymbolAddress(void *module_handle, const char *symbol_name)
 {
     return reinterpret_cast<T *>(GetSymbolAddress(module_handle, symbol_name));
 }
+
+std::string GetExecutableName();
