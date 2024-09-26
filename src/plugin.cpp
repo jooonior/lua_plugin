@@ -89,9 +89,6 @@ Plugin::Plugin()
 
 bool Plugin::Load(CreateInterfaceFn *interface_factory, CreateInterfaceFn *game_server_factory)
 {
-    if (!ConnectEnginePrintFunctions())
-        return false;
-
     if (_name.empty())
         return false;
 

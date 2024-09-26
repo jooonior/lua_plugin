@@ -1,5 +1,6 @@
 #include "interface.hpp"
 
+#include "engine.hpp"
 #include "platform.hpp"
 #include "plugin.hpp"
 
@@ -40,6 +41,13 @@ static void *GetPluginInstance(const char *interface_version)
 INTERFACE  // exported symbol
 void *CreateInterface(const char *name, int *return_code)
 {
+    static bool are_print_functions_connected = ConnectEnginePrintFunctions();
+    if (!are_print_functions_connected)
+    {
+        // Nothing we can do...
+        return nullptr;
+    }
+
     void *interface_ptr = GetPluginInstance(name);
 
     if (return_code != nullptr)
