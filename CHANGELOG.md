@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.3.0
+
+- Added Portal 2 support.
+
 ## v1.2.1
 
 - Fixed Windows release builds using debug versions of system libraries.
