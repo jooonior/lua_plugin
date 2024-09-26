@@ -16,6 +16,7 @@ set(
   src/interface.hpp
   src/L.hpp
   src/platform.hpp
+  src/plugin.hpp
 )
 
 add_subdirectory(deps)
