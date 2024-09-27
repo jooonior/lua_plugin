@@ -72,9 +72,9 @@ public:
 
     virtual PluginResult ClientConnect(bool *allow_connect, edict_t *entity, const char *name, const char *address, char *reject, int max_reject_length);
 
-    virtual PluginResult ClientCommand_v1(edict_t *entity);
+    virtual PluginResult ClientCommand(edict_t *entity);
 
-    virtual PluginResult ClientCommand_v2(edict_t *entity, const CCommand &args);
+    virtual PluginResult ClientCommand(edict_t *entity, const CCommand &args);
 
     virtual PluginResult NetworkIDValidated(const char *user_name, const char *network_id);
 
