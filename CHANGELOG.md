@@ -3,6 +3,7 @@
 ## v1.3.0
 
 - Added Portal 2 support.
+- Fixed `IServerPluginCallbacks::ClientCommand` signature in version 1 of the interface.
 
 ## v1.2.1
 
