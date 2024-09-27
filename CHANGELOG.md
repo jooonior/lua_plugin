@@ -4,6 +4,7 @@
 
 - Added Portal 2 support.
 - Fixed `IServerPluginCallbacks::ClientCommand` signature in version 1 of the interface.
+- Fixed not loading `lua51.dll` in Dark Messiah (and possibly other old engine builds).
 
 ## v1.2.1
 
