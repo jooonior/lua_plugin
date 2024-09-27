@@ -165,6 +165,8 @@ struct ServerPluginRouter : IServerPluginCallbacks
 {
     ServerPlugin plugin;
 
+    ServerPluginRouter() : plugin(IServerPluginCallbacks::INTERFACE_VERSION) {}
+
     // Defines all possible `IServerPluginCallbacks` functions. Those that override inherited
     // ones are laid out according to the base vtable, the rest ends up unused at the end.
 

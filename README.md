@@ -93,6 +93,8 @@ The only modifications to the Lua environment are:
   the directory with the plugin binary
 - [`package.cpath`][package.cpath] is set to `?.dll`/`?.so` and
   `loadall.dll`/`loadall.so` inside of the directory with the plugin binary
+- `INTERFACEVERSION_ISERVERPLUGINCALLBACKS` is set to the selected
+  `IServerPluginCallbacks` interface version
 
 No other integration with the engine is implemented. You are expected to use
 LuaJIT's [`ffi`][ffi] library for interacting with the engine.

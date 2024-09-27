@@ -7,6 +7,7 @@
 struct lua_State;
 
 #include <string>
+#include <string_view>
 
 
 /**
@@ -16,6 +17,7 @@ struct Plugin
 {
 private:
     lua_State *L = nullptr;
+    std::string _version;
     std::string _path;
     std::string _name;
     std::string _description;
@@ -36,7 +38,7 @@ protected:
     }
 
 public:
-    Plugin();
+    Plugin(std::string_view version);
 
     virtual bool Load(CreateInterfaceFn *interface_factory, CreateInterfaceFn *game_server_factory);
 

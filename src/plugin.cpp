@@ -57,7 +57,8 @@ bool TryCallLuaMethod(lua_State *L, const char *method, int retc, Args&&... args
 }
 
 
-Plugin::Plugin()
+Plugin::Plugin(std::string_view version)
+    : _version{ version }
 {
     // Get path to this module.
 
@@ -134,6 +135,9 @@ bool Plugin::Load(CreateInterfaceFn *interface_factory, CreateInterfaceFn *game_
 
     L_SetGlobalFunction(L, "print", &L_Print<Print>);
     L_SetGlobalFunction(L, "warn", &L_Print<Warn>);
+
+    lua_pushstring(L, _version.c_str());
+    lua_setglobal(L, "INTERFACEVERSION_ISERVERPLUGINCALLBACKS");
 
     L_SetPackagePath(L, _path.c_str());
 
