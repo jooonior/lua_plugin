@@ -1,5 +1,33 @@
 #include "platform.hpp"
 
+//============================== All Platforms ================================#
+
+#include <whereami.h>
+
+
+const char *GetModulePath()
+{
+    static std::string path;
+
+    if (path.empty())
+    {
+        auto length = wai_getModulePath(nullptr, 0, nullptr);
+        if (length < 0)
+            return nullptr;
+
+        path.resize(length);
+
+        length = wai_getModulePath(path.data(), path.size(), nullptr);
+        if (length < 0)
+        {
+            path.clear();
+            return nullptr;
+        }
+    };
+
+    return path.data();
+}
+
 #if defined(_WIN32) //============= Windows ===================================#
 
 #define WIN32_LEAN_AND_MEAN

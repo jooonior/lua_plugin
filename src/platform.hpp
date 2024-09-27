@@ -25,3 +25,5 @@ T *GetSymbolAddress(void *module_handle, const char *symbol_name)
 }
 
 std::string GetExecutableName();
+
+const char *GetModulePath();

@@ -5,7 +5,6 @@
 #include "L.hpp"
 
 #include <lua.hpp>
-#include <whereami.h>
 
 #include <filesystem>
 #include <string>
@@ -60,17 +59,14 @@ bool TryCallLuaMethod(lua_State *L, const char *method, int retc, Args&&... args
 Plugin::Plugin(std::string_view version)
     : _version{ version }
 {
-    // Get path to this module.
-
-    int length = wai_getModulePath(nullptr, 0, nullptr);
-    if (length < 0)
+    const char *module_path = GetModulePath();
+    if (module_path == nullptr)
     {
         // Nothing we can do...
         return;
     }
 
-    _path.resize(length);
-    wai_getModulePath(_path.data(), _path.capacity(), nullptr);
+    _path = module_path;
 
     // Strip file extension.
     auto last_dot = _path.find_last_of(".");

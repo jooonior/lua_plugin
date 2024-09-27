@@ -52,9 +52,18 @@ add_custom_command(
     "${PROJECT_SOURCE_DIR}/mod/addons/"
 )
 
-# On Linux, make the plugin load the LuaJIT library from its own directory.
+# Make the plugin load the LuaJIT library from its own directory.
+
+# On Linux, this is done by setting its rpath.
 set_target_properties(
   lua_plugin PROPERTIES
   BUILD_WITH_INSTALL_RPATH TRUE
   INSTALL_RPATH "$ORIGIN"
 )
+
+# On Windows, the same effect can be achieved by using a custom delay load hook.
+if (MSVC)
+  target_link_options(lua_plugin PRIVATE "/DELAYLOAD:$<PATH:GET_FILENAME,$<TARGET_FILE:luajit>>")
+  target_link_libraries(lua_plugin delayimp)
+  target_sources(lua_plugin PRIVATE src/delayhook.cpp)
+endif()
